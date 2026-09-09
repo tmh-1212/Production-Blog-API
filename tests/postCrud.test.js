@@ -2,7 +2,7 @@ const request = require("supertest");
 const app = require("../app");
 
 const mongoose = require("mongoose");
-
+const User = require("../models/User");
 
 jest.setTimeout(30000);
 
@@ -17,32 +17,54 @@ describe("Post CRUD API Tests", () => {
 
 
     // Create user and get token before tests
-    beforeAll(async()=>{
+beforeAll(async () => {
 
-     
-
-        const register = await request(app)
+    // 1. Register user
+    const register = await request(app)
         .post("/api/auth/register")
         .send({
-            name:"Post Tester",
-            email:"post@test.com",
-            password:"12345678"
+            name: "Post Tester",
+            email: "post@test.com",
+            password: "12345678"
         });
 
-
-        const login = await request(app)
-        .post("/api/auth/login")
-        .send({
-            email:"post@test.com",
-            password:"12345678"
-        });
+    expect(register.statusCode).toBe(201);
 
 
-        token = login.body.data.accessToken;
-
-console.log("TOKEN:", token);
+    // 2. Get verification token from test database
+    const user = await User.findOne({
+        email: "post@test.com"
     });
 
+    expect(user).toBeDefined();
+    expect(user.emailVerificationToken).toBeDefined();
+
+
+    // 3. Verify email
+    const verifyResponse = await request(app)
+        .get(`/api/auth/verify-email/${user.emailVerificationToken}`);
+
+    expect(verifyResponse.statusCode).toBe(200);
+
+
+    // 4. Login
+    const login = await request(app)
+        .post("/api/auth/login")
+        .send({
+            email: "post@test.com",
+            password: "12345678"
+        });
+
+    expect(login.statusCode).toBe(200);
+
+
+    // 5. Get access token
+    token = login.body.data.accessToken;
+
+    expect(token).toBeDefined();
+
+    console.log("TOKEN:", token);
+});
 
 
     // CREATE POST

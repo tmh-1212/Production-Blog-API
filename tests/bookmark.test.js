@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../app");
 const mongoose = require("mongoose");
-
+const User = require("../models/User");
 jest.setTimeout(30000);
 
 require("dotenv").config({
@@ -14,50 +14,76 @@ describe("Bookmark API Integration Tests", () => {
     let postIdA;
     let postIdB;
 
-    // Register a user and create two posts to bookmark
-    beforeAll(async () => {
+ beforeAll(async () => {
 
-        await request(app)
-            .post("/api/auth/register")
-            .send({
-                name: "Bookmark Tester",
-                email: "bookmark@test.com",
-                password: "12345678"
-            });
+    // 1. Register user
+    const register = await request(app)
+        .post("/api/auth/register")
+        .send({
+            name: "Bookmark Tester",
+            email: "bookmark@test.com",
+            password: "12345678"
+        });
 
-        const login = await request(app)
-            .post("/api/auth/login")
-            .send({
-                email: "bookmark@test.com",
-                password: "12345678"
-            });
+    expect(register.statusCode).toBe(201);
 
-        token = login.body.data.accessToken;
-
-        // Create two posts
-        const postA = await request(app)
-            .post("/api/posts")
-            .set("Authorization", `Bearer ${token}`)
-            .send({
-                title: "Bookmark Post A",
-                description: "First post to bookmark",
-                category: "Testing"
-            });
-
-        postIdA = postA.body.post._id;
-
-        const postB = await request(app)
-            .post("/api/posts")
-            .set("Authorization", `Bearer ${token}`)
-            .send({
-                title: "Bookmark Post B",
-                description: "Second post to bookmark",
-                category: "Testing"
-            });
-
-        postIdB = postB.body.post._id;
+    // 2. Get verification token from test database
+    const user = await User.findOne({
+        email: "bookmark@test.com"
     });
 
+    expect(user).toBeDefined();
+    expect(user.emailVerificationToken).toBeDefined();
+
+    // 3. Verify email
+    const verifyResponse = await request(app)
+        .get(`/api/auth/verify-email/${user.emailVerificationToken}`);
+
+    expect(verifyResponse.statusCode).toBe(200);
+
+    // 4. Login
+    const login = await request(app)
+        .post("/api/auth/login")
+        .send({
+            email: "bookmark@test.com",
+            password: "12345678"
+        });
+
+    expect(login.statusCode).toBe(200);
+
+    // 5. Get access token
+    token = login.body.data.accessToken;
+
+    expect(token).toBeDefined();
+
+    // 6. Create first post
+    const postA = await request(app)
+        .post("/api/posts")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+            title: "Bookmark Post A",
+            description: "First post to bookmark",
+            category: "Testing"
+        });
+
+    expect(postA.statusCode).toBe(201);
+
+    postIdA = postA.body.post._id;
+
+    // 7. Create second post
+    const postB = await request(app)
+        .post("/api/posts")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+            title: "Bookmark Post B",
+            description: "Second post to bookmark",
+            category: "Testing"
+        });
+
+    expect(postB.statusCode).toBe(201);
+
+    postIdB = postB.body.post._id;
+});
 
     // ─── ADD BOOKMARK ────────────────────────────────────
 

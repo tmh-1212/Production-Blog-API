@@ -1,6 +1,7 @@
 const request = require("supertest");
 const app = require("../app");
 const mongoose = require("mongoose");
+const User = require("../models/User");
 
 jest.setTimeout(30000);
 
@@ -18,41 +19,64 @@ describe("Comment API Integration Tests", () => {
     // Register two users and create a post to comment on
     beforeAll(async () => {
 
-        // User A — post author and comment creator
-        await request(app)
-            .post("/api/auth/register")
-            .send({
-                name: "Comment Tester A",
-                email: "comment-a@test.com",
-                password: "12345678"
-            });
+   // User A — post author and comment creator
+await request(app)
+    .post("/api/auth/register")
+    .send({
+        name: "Comment Tester A",
+        email: "comment-a@test.com",
+        password: "12345678"
+    });
 
-        const loginA = await request(app)
-            .post("/api/auth/login")
-            .send({
-                email: "comment-a@test.com",
-                password: "12345678"
-            });
+const userA = await User.findOne({
+    email: "comment-a@test.com"
+});
 
-        tokenA = loginA.body.data.accessToken;
+expect(userA).toBeDefined();
+expect(userA.emailVerificationToken).toBeDefined();
 
-        // User B — second user for ownership tests
-        await request(app)
-            .post("/api/auth/register")
-            .send({
-                name: "Comment Tester B",
-                email: "comment-b@test.com",
-                password: "12345678"
-            });
+await request(app)
+    .get(`/api/auth/verify-email/${userA.emailVerificationToken}`);
 
-        const loginB = await request(app)
-            .post("/api/auth/login")
-            .send({
-                email: "comment-b@test.com",
-                password: "12345678"
-            });
+const loginA = await request(app)
+    .post("/api/auth/login")
+    .send({
+        email: "comment-a@test.com",
+        password: "12345678"
+    });
 
-        tokenB = loginB.body.data.accessToken;
+expect(loginA.statusCode).toBe(200);
+tokenA = loginA.body.data.accessToken;
+
+
+// User B — second user for ownership tests
+await request(app)
+    .post("/api/auth/register")
+    .send({
+        name: "Comment Tester B",
+        email: "comment-b@test.com",
+        password: "12345678"
+    });
+
+const userB = await User.findOne({
+    email: "comment-b@test.com"
+});
+
+expect(userB).toBeDefined();
+expect(userB.emailVerificationToken).toBeDefined();
+
+await request(app)
+    .get(`/api/auth/verify-email/${userB.emailVerificationToken}`);
+
+const loginB = await request(app)
+    .post("/api/auth/login")
+    .send({
+        email: "comment-b@test.com",
+        password: "12345678"
+    });
+
+expect(loginB.statusCode).toBe(200);
+tokenB = loginB.body.data.accessToken;
 
         // Create a published post to attach comments to
         const postRes = await request(app)
