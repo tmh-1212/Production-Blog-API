@@ -64,12 +64,7 @@ const registerSchema = Joi.object({
         .messages({
             "string.min": "Password must be at least 8 characters",
             "string.empty": "Password is required"
-        }),
-
-    role: Joi.string()
-        .valid("user", "admin")
-        .optional()
-
+        })
 });
 
 module.exports = { registerSchema };

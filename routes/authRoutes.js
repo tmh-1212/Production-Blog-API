@@ -81,6 +81,7 @@ const router = express.Router();
 const authController = require("../controllers/authController");
 const validate = require("../middleware/validate");
 const authMiddleware = require("../middleware/authMiddleware");
+const loginLimiter = require("../middleware/loginLimiter");
 
 const {
     registerSchema
@@ -166,6 +167,7 @@ router.post(
  */
 router.post(
     "/login",
+    loginLimiter,
     authController.login
 );
 

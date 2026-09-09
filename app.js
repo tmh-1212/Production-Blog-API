@@ -103,6 +103,7 @@ const sessionRoutes = require("./routes/sessionRoutes");
 const errorHandler = require("./middleware/errorMiddleware");
 const limiter = require("./middleware/rateLimiter");
 const requestId = require("./middleware/requestId");
+const mongoSanitize = require("./middleware/mongoSanitize");
 
 const logger = require("./utils/logger");
 
@@ -126,6 +127,8 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended:true
 }));
+
+app.use(mongoSanitize);
 
 
 // Security

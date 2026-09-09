@@ -145,10 +145,16 @@ const authMiddleware = async(req,res,next)=>{
 
         }
 
+        if(user.status === "blocked"){
 
+            return res.status(403).json({
+                success: false,
+                message: "Account is blocked"
+            });
+
+        }
 
         req.user = user;
-
 
         next();
 

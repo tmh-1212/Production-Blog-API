@@ -15,9 +15,14 @@ max:5,
 
 message:{
 
+success: false,
+
 message:
 "Too many login attempts"
 
-}
+},
+
+standardHeaders: true,
+legacyHeaders: false
 
 });

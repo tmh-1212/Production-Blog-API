@@ -543,9 +543,9 @@ const register = async (data) => {
 
 
     // IMPORTANT:
-    // New users must verify their email
+    // New users must verify their email and always receive user role
     data.emailVerified = false;
-
+    data.role = "user";
 
     // 4. Create user
     const user =
@@ -656,7 +656,19 @@ const login = async (email, password) => {
     }
 
 
-    // 5. Generate tokens
+    // 5. Check if account is blocked
+    if (user.status === "blocked") {
+
+        const error =
+            new Error("Account is blocked");
+
+        error.statusCode = 403;
+
+        throw error;
+    }
+
+
+    // 6. Generate tokens
     const accessToken =
         generateAccessToken(user._id);
 

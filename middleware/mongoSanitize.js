@@ -2,16 +2,23 @@ const sanitize = (req, res, next) => {
 
     const sanitizeObject = (obj) => {
 
+        if (!obj || typeof obj !== "object") {
+            return;
+        }
+
         for (let key in obj) {
 
-            if (key.includes("$") || key.includes(".")) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
 
-                delete obj[key];
+                if (key.includes("$") || key.includes(".")) {
 
-            } 
-            else if (typeof obj[key] === "object") {
+                    delete obj[key];
 
-                sanitizeObject(obj[key]);
+                } else if (obj[key] !== null && typeof obj[key] === "object") {
+
+                    sanitizeObject(obj[key]);
+
+                }
 
             }
 
@@ -19,10 +26,17 @@ const sanitize = (req, res, next) => {
 
     };
 
+    if (req.body) {
+        sanitizeObject(req.body);
+    }
 
-    sanitizeObject(req.body);
+    if (req.params) {
+        sanitizeObject(req.params);
+    }
 
-    sanitizeObject(req.params);
+    if (req.query) {
+        sanitizeObject(req.query);
+    }
 
     next();
 
