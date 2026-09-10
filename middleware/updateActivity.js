@@ -1,4 +1,5 @@
 const Session = require("../models/Session");
+const logger = require("../utils/logger");
 
 const updateActivity = async (req, res, next) => {
     try {
@@ -22,7 +23,7 @@ const updateActivity = async (req, res, next) => {
 
     } catch (error) {
 
-        console.error(error);
+        logger.error(error);
 
         next();
 

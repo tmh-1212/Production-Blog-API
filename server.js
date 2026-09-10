@@ -603,14 +603,14 @@ const startServer = async () => {
     const PORT = process.env.PORT || 5000;
 
     const server = app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        logger.info(`Server running on port ${PORT}`);
     });
 
     const shutdown = async (signal) => {
-        console.log(`\n${signal} received. Closing server gracefully...`);
+        logger.info(`\n${signal} received. Closing server gracefully...`);
         server.close(async () => {
             await mongoose.connection.close();
-            console.log("MongoDB connection closed. Process terminated.");
+            logger.info("MongoDB connection closed. Process terminated.");
             process.exit(0);
         });
     };

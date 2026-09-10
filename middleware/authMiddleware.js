@@ -1,96 +1,6 @@
-// const jwt = require("jsonwebtoken");
-
-// const User = require("../models/User");
-
-
-// const protect = async (req,res,next)=>{
-
-//     let token;
-
-
-//     if(
-//         req.headers.authorization &&
-//         req.headers.authorization.startsWith("Bearer")
-//     ){
-
-//         try{
-
-
-//             token =
-//             req.headers.authorization.split(" ")[1];
-
-
-//             const decoded =
-//             jwt.verify(
-//                 token,
-//                 process.env.JWT_SECRET
-//             );
-
-
-//             req.user =
-//             await User.findById(
-//                 decoded.id
-//             )
-//             .select("-password");
-
-
-
-//             if(!req.user){
-
-//                 return res.status(401)
-//                 .json({
-
-//                     success:false,
-
-//                     message:"User not found"
-
-//                 });
-
-//             }
-
-
-//             next();
-
-
-//         }
-//        catch (error) {
-//     console.log(error);
-
-//     return res.status(401).json({
-//         success: false,
-//         message: error.message
-//     });
-// }
-
-
-//     }
-//     else{
-
-
-//         return res.status(401)
-//         .json({
-
-//             success:false,
-
-//             message:"No token provided"
-
-//         });
-
-
-//     }
-
-
-// };
-
-
-
-// module.exports = protect;
-
-
-
-//updeted part 10:
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const logger = require("../utils/logger");
 
 
 const authMiddleware = async(req,res,next)=>{
@@ -163,7 +73,7 @@ const authMiddleware = async(req,res,next)=>{
     }catch(error){
 
 
-        console.log(error);
+        logger.error(error);
 
 
         if(error.name === "TokenExpiredError"){
