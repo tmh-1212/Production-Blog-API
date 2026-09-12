@@ -13,14 +13,11 @@ async(userId)=>{
 
 
 
-    if(!user){
-
-        throw new Error(
-            "User not found"
-        );
-
-    }
-
+   if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+}
 
     return user;
 
@@ -29,18 +26,16 @@ async(userId)=>{
 
 
 
+const updateProfile = async (userId, data) => {
+    const user = await userRepository.update(userId, data);
 
-const updateProfile =
-async(userId,data)=>{
+    if (!user) {
+        const error = new Error("User not found");
+        error.statusCode = 404;
+        throw error;
+    }
 
-
-    return await userRepository
-    .update(
-        userId,
-        data
-    );
-
-
+    return user;
 };
 
 const changePassword =
@@ -56,12 +51,10 @@ await User.findById(userId)
 .select("+password");
 
 
-if(!user){
-
-throw new Error(
-"User not found"
-);
-
+if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
 }
 
 

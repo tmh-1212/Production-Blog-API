@@ -1,80 +1,3 @@
-// const express = require("express");
-
-// const router = express.Router();
-
-// const authController = require("../controllers/authController");
-
-// const validate =
-// require("../middleware/validate");
-
-
-// const {
-// registerSchema
-// }
-// =
-// require("../validation/authValidation");
-
-
-// router.post(
-
-// "/register",
-
-// validate(registerSchema),
-
-// authController.register
-
-// );
-
-
-
-
-// router.post("/login",authController.login);
-
-// router.post(
-
-// "/login",
-
-// loginLimiter,
-
-// controller.login
-
-// );
-
-
-// module.exports = router;
-
-
-
-// //practice for part 2 :
-// const express = require("express");
-// const router = express.Router();
-
-// const authController = require("../controllers/authController");
-// const validate = require("../middleware/validate");
-
-// const {
-//     registerSchema
-// } = require("../validation/authValidation");
-
-// router.post(
-//     "/register",
-//     validate(registerSchema),
-//     authController.register
-// );
-
-// router.post(
-//     "/login",
-//     authController.login
-// );
-
-// module.exports = router;
-
-
-
-
-
-//Add Swagger documentation to authRoutes.js
-
 const express = require("express");
 const router = express.Router();
 
@@ -84,9 +7,12 @@ const authMiddleware = require("../middleware/authMiddleware");
 const loginLimiter = require("../middleware/loginLimiter");
 
 const {
-    registerSchema
+    registerSchema,
+    loginSchema,
+    forgotPasswordSchema,
+    resetPasswordSchema,
+    refreshTokenSchema
 } = require("../validation/authValidation");
-
 
 /**
  * @swagger
@@ -168,6 +94,7 @@ router.post(
 router.post(
     "/login",
     loginLimiter,
+    validate(loginSchema),
     authController.login
 );
 
@@ -226,6 +153,7 @@ router.get(
 
 router.post(
     "/forgot-password",
+    validate(forgotPasswordSchema),
     authController.forgotPassword
 );
 /**
@@ -263,6 +191,7 @@ router.post(
  */
 router.post(
     "/reset-password/:token",
+    validate(resetPasswordSchema),
     authController.resetPassword
 );
 
@@ -315,6 +244,7 @@ router.post(
 
 router.post(
     "/refresh-token",
+    validate(refreshTokenSchema),
     authController.refreshToken
 );
 module.exports = router;

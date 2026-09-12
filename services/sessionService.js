@@ -6,10 +6,18 @@ const getUserSessions = async (userId) => {
 };
 
 const deleteSession = async (userId, sessionId) => {
-    return await Session.findOneAndDelete({
+    const session = await Session.findOneAndDelete({
         _id: sessionId,
         user: userId
     });
+
+    if (!session) {
+        const error = new Error("Session not found");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return session;
 };
 
 const deleteAllSessions = async (userId) => {

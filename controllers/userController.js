@@ -1,153 +1,3 @@
-// const userService =
-// require("../services/userService");
-
-
-
-// // GET PROFILE
-
-// const getProfile =
-// async(req,res,next)=>{
-
-
-//     try{
-
-
-//         const user =
-//         await userService
-//         .getProfile(
-//             req.user._id
-//         );
-
-
-//         res.json({
-
-//             success:true,
-
-//             user
-
-//         });
-
-
-//     }
-//     catch(error){
-
-//         next(error);
-
-//     }
-
-
-// };
-
-
-
-
-
-// // UPDATE PROFILE
-
-// const updateProfile =
-// async(req,res,next)=>{
-
-
-//     try{
-
-
-//         const data = {
-
-
-//             name:req.body.name,
-
-//             bio:req.body.bio,
-
-//             phone:req.body.phone
-
-
-//         };
-
-
-
-//         if(req.file){
-
-//             data.avatar =
-//             req.file.path;
-
-//         }
-
-
-
-//         const user =
-//         await userService
-//         .updateProfile(
-
-//             req.user._id,
-
-//             data
-
-//         );
-
-
-
-//         res.json({
-
-//             success:true,
-
-//             message:
-//             "Profile updated successfully",
-
-//             user
-
-//         });
-
-
-//     }
-//     catch(error){
-
-//         next(error);
-
-//     }
-
-
-// };
-
-
-
-// module.exports={
-
-//     getProfile,
-
-//     updateProfile
-
-// };
-
-
-
-// //practice for each part
-//       // part 3:
-//    const getProfile =
-// async(req,res)=>{
-
-
-//     res.json({
-
-//         success:true,
-
-//         user:req.user
-
-//     });
-
-
-// };
-
-
-// module.exports={
-
-//     getProfile
-
-// };
-
-
-
-
-     //part 4:
 const userService =
 require("../services/userService");
 
@@ -192,17 +42,7 @@ async(req,res,next)=>{
 
 
 
-const updateProfile = async (req, res) => {
-
-    // const updateData = {
-
-    //     name: req.body.name,
-
-    //     bio: req.body.bio,
-    //     email: req.body.email,
-    //     phone: req.body.phone
-    // };
-
+const updateProfile = async (req, res, next) => {
     try {
 
 
@@ -237,7 +77,7 @@ existingUser &&
 existingUser._id.toString() !== req.user.id
 ){
 
-return res.status(400).json({
+return res.status(409).json({
     success:false,
     message:"Email already in use"
 });
@@ -272,16 +112,11 @@ return res.status(400).json({
    
 }
 
-    catch(error){
+   catch(error){
 
-    res.status(500).json({
+    next(error);
 
-        success:false,
-
-        message:error.message
-
-    });
-    }
+}
 
 };
 

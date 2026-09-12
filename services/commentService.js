@@ -42,8 +42,13 @@ async(postId)=>{
 const deleteComment = async (id) => {
     const comment = await repository.findById(id);
 
-    const deleted = await repository.remove(id);
+    if (!comment) {
+        const error = new Error("Comment not found");
+        error.statusCode = 404;
+        throw error;
+    }
 
+    const deleted = await repository.remove(id);
     // Decrement commentsCount (never below 0)
     if (comment) {
         await Post.findByIdAndUpdate(
@@ -61,8 +66,10 @@ const updateComment = async (id, text, requesterId, isAdmin = false) => {
     const comment = await repository.findById(id);
 
     if (!comment) {
-        throw new Error("Comment not found");
-    }
+    const error = new Error("Comment not found");
+    error.statusCode = 404;
+    throw error;
+}
 
     if (
         comment.user.toString() !== requesterId.toString() &&

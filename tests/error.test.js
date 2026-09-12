@@ -109,7 +109,7 @@ describe("API Error Handling Tests", () => {
 
             errorHandler(dupError, req, res, next);
 
-            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.status).toHaveBeenCalledWith(409);
             expect(res.json).toHaveBeenCalledWith({
                 success: false,
                 message: "Duplicate field value entered: email"

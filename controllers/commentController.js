@@ -1,56 +1,5 @@
 const service =
 require("../services/commentService");
-
-
-
-// Create Comment
-
-// const createComment =
-// async(req,res,next)=>{
-
-
-// try{
-
-
-// const comment =
-// await service.addComment({
-
-//     text:req.body.text,
-
-//     user:req.user._id,
-
-//    // post:req.body.postId
-//      post: req.params.postId
-
-// });
-
-
-
-// res.status(201)
-// .json({
-
-// success:true,
-
-// message:
-// "Comment created",
-
-// comment
-
-// });
-
-
-
-// }
-// catch(error){
-
-// next(error);
-
-// }
-
-
-// };
-
-
 const Post = require("../models/Post");
 
 const createComment = async (req, res, next) => {
