@@ -37,7 +37,7 @@ async(id,data)=>{
         data,
 
         {
-            new:true
+            returnDocument: "after"
         }
 
     )

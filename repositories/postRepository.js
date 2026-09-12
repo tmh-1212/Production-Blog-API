@@ -112,7 +112,7 @@ const likePost = async (id, userId) => {
     return await Post.findByIdAndUpdate(
         id,
         { $addToSet: { likes: userId } },
-        { new: true }
+        { returnDocument: "after" }
     );
 };
 
@@ -122,7 +122,7 @@ const unlikePost = async (id, userId) => {
     return await Post.findByIdAndUpdate(
         id,
         { $pull: { likes: userId } },
-        { new: true }
+        { returnDocument: "after" }
     );
 };
 
@@ -132,7 +132,7 @@ const incrementViews = async (id) => {
     return await Post.findByIdAndUpdate(
         id,
         { $inc: { views: 1 } },
-        { new: true }
+        { returnDocument: "after" }
     );
 };
 
@@ -143,12 +143,12 @@ const addBookmark = async (postId, userId) => {
         User.findByIdAndUpdate(
             userId,
             { $addToSet: { bookmarks: postId } },
-            { new: true }
+            { returnDocument: "after" }
         ),
         Post.findByIdAndUpdate(
             postId,
             { $inc: { bookmarksCount: 1 } },
-            { new: true }
+            { returnDocument: "after" }
         )
     ]);
     return { user, post };
@@ -161,12 +161,12 @@ const removeBookmark = async (postId, userId) => {
         User.findByIdAndUpdate(
             userId,
             { $pull: { bookmarks: postId } },
-            { new: true }
+            { returnDocument: "after" }
         ),
         Post.findByIdAndUpdate(
             postId,
             { $inc: { bookmarksCount: -1 } },
-            { new: true }
+            { returnDocument: "after" }
         )
     ]);
     return { user, post };

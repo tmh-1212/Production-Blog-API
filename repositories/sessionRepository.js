@@ -26,7 +26,7 @@ const updateLastActivity = async (id) => {
             lastActivity: new Date()
         },
         {
-            new: true
+            returnDocument: "after"
         }
     );
 };

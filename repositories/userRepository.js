@@ -18,7 +18,7 @@ const create = async (data) => {
 // Update user
 const update = async (id, data) => {
     return await User.findByIdAndUpdate(id, data, {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
     });
 };
