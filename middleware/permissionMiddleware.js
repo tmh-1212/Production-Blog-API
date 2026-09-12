@@ -5,20 +5,15 @@ const checkPermission =
 return(req,res,next)=>{
 
 
-if(
-!req.user.permissions.includes(
-permission
-)
-){
-
-return res.status(403)
-.json({
-
-message:
-"Permission denied"
-
-});
-
+if (
+    !req.user ||
+    !Array.isArray(req.user.permissions) ||
+    !req.user.permissions.includes(permission)
+) {
+    return res.status(403).json({
+        success: false,
+        message: "Permission denied"
+    });
 }
 
 
