@@ -1,15 +1,14 @@
-const Session = require("../models/Session");
+const sessionRepository = require("../repositories/sessionRepository");
 
 const getUserSessions = async (userId) => {
-    return await Session.find({ user: userId })
-        .sort({ createdAt: -1 });
+    return await sessionRepository.findByUser(userId);
 };
 
 const deleteSession = async (userId, sessionId) => {
-    const session = await Session.findOneAndDelete({
-        _id: sessionId,
-        user: userId
-    });
+    const session = await sessionRepository.deleteByUserAndId(
+        userId,
+        sessionId
+    );
 
     if (!session) {
         const error = new Error("Session not found");
@@ -21,9 +20,7 @@ const deleteSession = async (userId, sessionId) => {
 };
 
 const deleteAllSessions = async (userId) => {
-    return await Session.deleteMany({
-        user: userId
-    });
+    return await sessionRepository.deleteByUser(userId);
 };
 
 module.exports = {

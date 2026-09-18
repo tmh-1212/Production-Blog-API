@@ -35,6 +35,13 @@ const deleteById = async (id) => {
     return await Session.findByIdAndDelete(id);
 };
 
+const deleteByUserAndId = async (userId, sessionId) => {
+    return await Session.findOneAndDelete({
+        _id: sessionId,
+        user: userId
+    });
+};
+
 const deleteByUser = async (userId) => {
     return await Session.deleteMany({
         user: userId
@@ -54,6 +61,7 @@ module.exports = {
     findByRefreshToken,
     updateLastActivity,
     deleteById,
+    deleteByUserAndId,
     deleteByUser,
     deleteByRefreshToken
 };
