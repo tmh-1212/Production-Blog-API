@@ -142,6 +142,17 @@ tokenB = loginB.body.data.accessToken;
     });
 
 
+    test("Reject comment longer than 500 characters", async () => {
+        const longText = "A".repeat(501);
+
+        const res = await request(app)
+            .post(`/api/comments/${postId}`)
+            .set("Authorization", `Bearer ${tokenA}`)
+            .send({ text: longText });
+
+        expect(res.statusCode).toBeGreaterThanOrEqual(400);
+    });
+
     test("commentsCount increments after creating a comment", async () => {
         const postBefore = await request(app).get(`/api/posts/${postId}`);
         const countBefore = postBefore.body.post.commentsCount;
