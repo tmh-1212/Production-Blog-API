@@ -3,6 +3,7 @@ const app = require("../app");
 
 const mongoose = require("mongoose");
 const User = require("../models/User");
+const Post = require("../models/Post");
 
 jest.setTimeout(30000);
 
@@ -176,6 +177,37 @@ console.log(response.body);
     });
 
 
+
+    // UPDATE POST SECURITY
+    test("Should not allow updating server-controlled fields", async()=>{
+
+        const response = await request(app)
+            .put(`/api/posts/${postId}`)
+            .set(
+                "Authorization",
+                `Bearer ${token}`
+            )
+            .send({
+                views: 999999,
+                commentsCount: 999,
+                bookmarksCount: 999
+            });
+
+        expect(response.statusCode)
+            .toBe(200);
+
+        const updatedPost =
+            await Post.findById(postId);
+
+        expect(updatedPost.views)
+            .toBe(1);
+
+        expect(updatedPost.commentsCount)
+            .toBe(0);
+
+        expect(updatedPost.bookmarksCount)
+            .toBe(0);
+    });
 
     // DELETE POST
 

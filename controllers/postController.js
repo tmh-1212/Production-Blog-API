@@ -224,9 +224,14 @@ const updatePost = async (req, res, next) => {
             });
         }
 
-        // Prepare update data
+        // Prepare update data using an explicit allowlist.
+        // Client-controlled fields only.
         const updateData = {
-            ...req.body
+            ...(req.body.title !== undefined && { title: req.body.title }),
+            ...(req.body.description !== undefined && { description: req.body.description }),
+            ...(req.body.category !== undefined && { category: req.body.category }),
+            ...(req.body.status !== undefined && { status: req.body.status }),
+            ...(req.body.tags !== undefined && { tags: req.body.tags })
         };
 
         // If new image uploaded
