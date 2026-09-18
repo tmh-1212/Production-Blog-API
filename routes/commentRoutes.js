@@ -40,9 +40,12 @@ require("../middleware/checkOwner");
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - text
  *             properties:
- *               comment:
+ *               text:
  *                 type: string
+ *                 maxLength: 500
  *     responses:
  *       201:
  *         description: Comment created
