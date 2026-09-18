@@ -56,13 +56,6 @@ const sessionSchema = new mongoose.Schema({
 
 sessionSchema.index({ user: 1 });
 
-sessionSchema.index({ expiresAt: 1 });
-
-sessionSchema.index({ token: 1 });
-
-
-sessionSchema.index(
-  { expireAfterSeconds: 0 }
-);
+sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 module.exports = mongoose.model("Session", sessionSchema);
