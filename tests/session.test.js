@@ -109,6 +109,7 @@ describe("Session API Integration Tests", () => {
         expect(res.body.success).toBe(true);
         expect(Array.isArray(res.body.data)).toBe(true);
         expect(res.body.count).toBeGreaterThanOrEqual(1);
+        expect(res.body.data[0].refreshToken).toBeUndefined();
 
         const returnedIds = res.body.data.map(
             session => session._id

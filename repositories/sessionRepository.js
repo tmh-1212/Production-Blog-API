@@ -5,8 +5,12 @@ const create = async (sessionData) => {
 };
 
 const findByUser = async (userId) => {
-    return await Session.find({ user: userId })
-        .sort({ createdAt: -1 });
+    return await Session.find(
+        { user: userId },
+        {
+            refreshToken: 0
+        }
+    ).sort({ createdAt: -1 });
 };
 
 const findById = async (id) => {
