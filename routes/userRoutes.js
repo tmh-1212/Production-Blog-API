@@ -129,6 +129,9 @@ controller.updateProfile
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
  *             properties:
  *
  *               currentPassword:
@@ -137,6 +140,8 @@ controller.updateProfile
  *
  *               newPassword:
  *                 type: string
+ *                 minLength: 8
+ *                 maxLength: 30
  *                 example: newpassword123
  *
  *     responses:
@@ -144,7 +149,7 @@ controller.updateProfile
  *         description: Password updated successfully
  *
  *       400:
- *         description: Wrong current password
+ *         description: Invalid input or wrong current password
  */
 router.put(
     "/password",
