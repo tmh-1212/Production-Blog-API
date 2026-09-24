@@ -83,10 +83,32 @@ const refreshTokenSchema = Joi.object({
         })
 });
 
+const changePasswordSchema = Joi.object({
+
+    currentPassword: Joi.string()
+        .required()
+        .messages({
+            "string.empty": "Current password is required"
+        }),
+
+    newPassword: Joi.string()
+        .min(8)
+        .max(30)
+        .required()
+        .messages({
+            "string.min": "New password must be at least 8 characters",
+            "string.max": "New password must not exceed 30 characters",
+            "string.empty": "New password is required"
+        })
+
+});
+
+
 module.exports = {
     registerSchema,
     loginSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
-    refreshTokenSchema
+    refreshTokenSchema,
+    changePasswordSchema
 };

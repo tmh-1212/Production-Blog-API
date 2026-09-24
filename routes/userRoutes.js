@@ -20,6 +20,13 @@ require("../controllers/userController");
 const postController =
 require("../controllers/postController");
 
+const validate =
+require("../middleware/validate");
+
+const {
+    changePasswordSchema
+} = require("../validation/authValidation");
+
 
 
 
@@ -142,6 +149,7 @@ controller.updateProfile
 router.put(
     "/password",
     protect,
+    validate(changePasswordSchema),
     controller.changePassword
 );
 
