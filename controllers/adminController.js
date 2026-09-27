@@ -165,8 +165,6 @@ blockUser,
 
 unblockUser,
 
-deleteUser,
-
-unblockUser
+deleteUser
 
 };
